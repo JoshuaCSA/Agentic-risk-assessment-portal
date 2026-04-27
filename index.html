@@ -555,12 +555,12 @@ const THREATS_DATA = [
   {
     id:'T-005', name:'Skills with malicious instructions',
     desc:'Threat actors publish malicious skill packages (skill.md and associated files) with embedded adversarial instructions to public marketplaces or repositories. When loaded into Claude Code, the skill directs the coding assistant to perform unauthorised actions — such as exfiltrating credentials or creating a reverse shell.',
-    likelihoodBefore:'', likelihoodAfter:'', diagrams:['cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['cli']
   },
   {
     id:'T-006', name:'Hooks with malicious actions',
     desc:'Threat actors create repositories with a malicious hook pre-configured in settings.json (e.g. a post-tool-use or session-start hook). When a user clones the repository and interacts with the coding assistant, the hook\'s lifecycle event fires automatically and executes the embedded malicious payload without further user interaction.',
-    likelihoodBefore:'', likelihoodAfter:'', diagrams:['cli']
+    likelihoodBefore:'Possible', likelihoodAfter:'Unlikely', diagrams:['cli']
   }
 ];
 
