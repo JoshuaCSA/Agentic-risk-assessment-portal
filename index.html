@@ -100,6 +100,10 @@
     .tf-btn.active .tf-name { color: white; }
     .tf-btn .tf-scope { font-size: 0.7rem; color: #a0aec0; margin-top: 1px; }
     .tf-btn.active .tf-scope { color: #fbd38d; opacity: 0.85; }
+    .tf-btn.tf-muted { border-color: #e2e8f0 !important; background: white !important; }
+    .tf-btn.tf-muted .tf-id   { color: #cbd5e0; }
+    .tf-btn.tf-muted .tf-name { color: #cbd5e0; }
+    .tf-btn.tf-muted .tf-scope { color: #e2e8f0; }
 
     /* Affected component list in info panel */
     .comp-list-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f0f4f8; font-size: 0.875rem; color: #2d3748; }
@@ -264,7 +268,7 @@
 
     .table-wrap { overflow-x: auto; border-radius: 8px; border: 1.5px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    thead th { background: #2d3748; color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    thead th { background: #2d3748; color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
     tbody td { padding: 14px 16px; border-bottom: 1px solid #edf2f7; vertical-align: top; line-height: 1.6; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr.data-row { cursor: pointer; transition: background 0.12s; }
@@ -399,18 +403,11 @@
       <div class="filter-chips" id="mit-filter-chips"></div>
     </div>
 
-    <!-- Active TB filter banner -->
-    <div class="mit-tb-banner" id="mit-tb-filter-banner">
-      <span>Showing mitigations for trust boundary:</span>
-      <strong id="mit-tb-banner-text"></strong>
-      <button class="mit-tb-banner-clear" onclick="clearMitTbFilter()">✕ Clear filter</button>
-    </div>
-
     <div class="stats-row" id="mit-stats-row"></div>
 
     <div class="mit-body-layout">
 
-      <!-- Left: diagram + legend + TB description -->
+      <!-- Left: diagram + legend + TB filter info -->
       <div>
         <div class="attack-diagram-title">Architecture — Click a trust boundary to filter</div>
         <div class="diagram-wrapper" style="margin-bottom:10px;">
@@ -418,6 +415,12 @@
         </div>
         <div class="legend-note" style="background:#f0fff4; border-color:#9ae6b4; color:#276749; margin-bottom:8px;">
           <strong>Green highlight</strong> = selected trust boundary. Click a TB label to filter the table.
+        </div>
+        <!-- TB filter banner lives here so it doesn't shift the page layout -->
+        <div class="mit-tb-banner" id="mit-tb-filter-banner" style="margin-bottom:8px;">
+          <span>Filtering by:</span>
+          <strong id="mit-tb-banner-text"></strong>
+          <button class="mit-tb-banner-clear" onclick="clearMitTbFilter()">✕ Clear</button>
         </div>
         <div class="tb-info-box" id="mit-tb-info">
           <strong id="mit-tb-name"></strong>
@@ -431,10 +434,10 @@
           <table>
             <thead>
               <tr>
-                <th style="width:50%">Mitigation</th>
-                <th style="width:22%">Threat Vector</th>
-                <th style="width:20%">Trust Boundary</th>
-                <th style="width:8%"></th>
+                <th style="width:62%">Mitigation</th>
+                <th style="width:14%">Threat Vector</th>
+                <th style="width:14%">Trust Boundary</th>
+                <th style="width:10%"></th>
               </tr>
             </thead>
             <tbody id="mit-tbody"></tbody>
@@ -573,55 +576,55 @@ const ATTACK_CHAINS = {
     name:'T-001: Malicious Instruction File Injection', diagramType:'ide',
     desc:'The attacker stages malicious prompts inside instruction files hosted in a compromised GitHub repository. When the developer clones and works with the repository, the coding assistant silently reads and executes the instructions, ultimately running a reverse shell.',
     steps:[
-      { step:1, desc:'User clones repository containing an instruction file with malicious prompts.', tactics:['Resource Development','Initial Access','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0010 — AI Supply Chain Compromise','AML.T0011 — User Execution'], mits:['Ensure open-source repositories are from trusted sources.','Use automated scanning for all downloaded files to detect malicious instructions.'], hl:['user','instruction-file'] },
-      { step:2, desc:'User interacts with the Coding Assistant to set up the project.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure the coding assistant to not auto-run tools/commands.','Perform logging of all interactions involving the coding assistant.'], hl:['user','coding-agent'] },
-      { step:3, desc:'Coding Assistant reads instruction file with malicious prompts.', tactics:['Execution','Persistence'], techniques:['AML.T0051.001 — Indirect LLM Prompt Injection','AML.T0081 — Modify AI Agent Configuration'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.','Perform logging of all interactions.','Prevent reading of sensitive user folders.'], hl:['coding-agent','instruction-file','llm'], hlTbs:['TB1','TB2'] },
+      { step:1, desc:'User clones repository containing an instruction file with malicious prompts.', tactics:['Resource Development','Initial Access','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0010 — AI Supply Chain Compromise','AML.T0011 — User Execution'], mits:['Ensure open-source repositories are from trusted sources.','Use automated scanning for all downloaded files to detect malicious instructions.'], hl:['instruction-file'] },
+      { step:2, desc:'User interacts with the Coding Assistant to set up the project.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure the coding assistant to not auto-run tools/commands.','Perform logging of all interactions involving the coding assistant.'], hl:['user','coding-agent'], hlTbs:['TB1'] },
+      { step:3, desc:'Coding Assistant reads instruction file with malicious prompts.', tactics:['Execution','Persistence'], techniques:['AML.T0051.001 — Indirect LLM Prompt Injection','AML.T0081 — Modify AI Agent Configuration'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.','Perform logging of all interactions.','Prevent reading of sensitive user folders.'], hl:['coding-agent','instruction-file','llm'], hlTbs:['TB2'] },
       { step:4, desc:'Coding Assistant creates an executable bash file and appends it with an encoded malicious command.', tactics:['Execution'], techniques:['AML.T0050 — Command and Scripting Interpreter'], mits:['Configure coding assistant to disallow automatic reading and execution of files.'], hl:['coding-agent','inbuilt-tools'] },
-      { step:5, desc:'Coding Assistant prompts user for authorisation to run the executable bash file.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Sandbox the environment the coding assistant is deployed in.','Configure coding assistant to disallow automatic execution of files.'], hl:['user','coding-agent'] },
-      { step:6, desc:'Coding Assistant runs the executable bash file. Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment the coding assistant is deployed in.'], hl:['coding-agent','inbuilt-tools'], hlTbs:['TB1'] }
+      { step:5, desc:'Coding Assistant prompts user for authorisation to run the executable bash file.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Sandbox the environment the coding assistant is deployed in.','Configure coding assistant to disallow automatic execution of files.'], hl:['user','coding-agent'], hlTbs:['TB1'], reverseArrows:true },
+      { step:6, desc:'Coding Assistant runs the executable bash file. Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment the coding assistant is deployed in.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-002a': {
     name:'T-002a: Malicious Remote MCP Server', diagramType:'ide',
     desc:'The attacker creates a replica of a popular remote MCP server with a malicious tool. When the user connects and the coding assistant invokes the tool, an encoded malicious command executes on the user\'s machine.',
     steps:[
-      { step:1, desc:'User connects to a remote MCP server containing a malicious tool and interacts with the Coding Assistant to set up the project.', tactics:['Resource Development','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0053 — AI Agent Tool Invocation','AML.T0011 — User Execution'], mits:['Ensure remote MCP sources are from trusted sources.','Perform MCP scanning to identify suspicious behaviours.','Deploy MCP-aware middleware to monitor tool execution.'], hl:['user','remote-mcp'], hlTbs:['TB3'] },
-      { step:2, desc:'Coding Assistant executes the malicious MCP tool containing an encoded malicious command from the remote MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution of tools/commands.','Perform logging of all interactions.','Perform MCP scanning.'], hl:['coding-agent','remote-mcp','llm'], hlTbs:['TB2','TB3'] },
-      { step:3, desc:'Coding Assistant attempts to execute the encoded malicious command and prompts user for authorisation.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure coding assistant to disallow automatic execution of commands.'], hl:['user','coding-agent'] },
-      { step:4, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'], hlTbs:['TB1'] }
+      { step:1, desc:'User connects to a remote MCP server containing a malicious tool and interacts with the Coding Assistant to set up the project.', tactics:['Resource Development','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0053 — AI Agent Tool Invocation','AML.T0011 — User Execution'], mits:['Ensure remote MCP sources are from trusted sources.','Perform MCP scanning to identify suspicious behaviours.','Deploy MCP-aware middleware to monitor tool execution.'], hl:['coding-agent','remote-mcp'], hlTbs:['TB3'] },
+      { step:2, desc:'Coding Assistant executes the malicious MCP tool containing an encoded malicious command from the remote MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution of tools/commands.','Perform logging of all interactions.','Perform MCP scanning.'], hl:['coding-agent','remote-mcp','llm'], hlTbs:['TB2','TB3'], reverseArrows:['TB3'] },
+      { step:3, desc:'Coding Assistant attempts to execute the encoded malicious command and prompts user for authorisation.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure coding assistant to disallow automatic execution of commands.'], hl:['user','coding-agent'], hlTbs:['TB1'], reverseArrows:true },
+      { step:4, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-002b': {
     name:'T-002b: Compromised Remote MCP Server', diagramType:'ide',
     desc:'The attacker gains access to a legitimate remote MCP server and appends a malicious payload. When the user next uses the coding assistant, the compromised tool executes the payload.',
     steps:[
-      { step:1, desc:'Attacker appends a benign remote MCP server with an encoded malicious command and restarts the server.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.','Perform MCP scanning.','Deploy MCP-aware middleware.'], hl:['remote-mcp'], hlTbs:['TB3'] },
+      { step:1, desc:'Attacker appends a benign remote MCP server with an encoded malicious command and restarts the server.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.','Perform MCP scanning.','Deploy MCP-aware middleware.'], hl:['coding-agent','remote-mcp'], hlTbs:['TB3'] },
       { step:2, desc:'User interacts with the Coding Assistant to update the project.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.'], hl:['user','coding-agent'] },
-      { step:3, desc:'Coding Assistant executes the malicious MCP tool from the compromised remote MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution of tools/commands.','Perform logging.'], hl:['coding-agent','remote-mcp','llm'], hlTbs:['TB2','TB3'] },
-      { step:4, desc:'Coding Assistant prompts user for authorisation to execute the encoded malicious command.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure coding assistant to disallow automatic execution.'], hl:['user','coding-agent'] },
-      { step:5, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent'], hlTbs:['TB1'] }
+      { step:3, desc:'Coding Assistant executes the malicious MCP tool from the compromised remote MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution of tools/commands.','Perform logging.'], hl:['coding-agent','remote-mcp','llm'], hlTbs:['TB2','TB3'], reverseArrows:['TB3'] },
+      { step:4, desc:'Coding Assistant prompts user for authorisation to execute the encoded malicious command.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Configure coding assistant to disallow automatic execution.'], hl:['user','coding-agent'], hlTbs:['TB1'], reverseArrows:true },
+      { step:5, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-003': {
     name:'T-003: Compromised Local MCP Server', diagramType:'ide',
     desc:'The attacker publishes a trojanised local MCP server package. When installed and connected by the user, the coding assistant invokes its malicious tool, granting the attacker remote access.',
     steps:[
-      { step:1, desc:'User downloads and sets up a local MCP server that contains a malicious tool.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Prompt the agent to self-reflect.','Perform MCP scanning.','Perform scanning on code files of repositories.'], hl:['user','local-mcp'], hlTbs:['TB4'] },
+      { step:1, desc:'User downloads and sets up a local MCP server that contains a malicious tool.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Prompt the agent to self-reflect.','Perform MCP scanning.','Perform scanning on code files of repositories.'], hl:['local-mcp'] },
       { step:2, desc:'User connects the local MCP server to the Coding Assistant and interacts to set up the project.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Prompt the agent to self-reflect.','Perform MCP scanning.','Deploy MCP-aware middleware.'], hl:['user','coding-agent','local-mcp'], hlTbs:['TB4'] },
-      { step:3, desc:'Coding Assistant executes the malicious MCP tool from the local MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution.','Perform logging.','Perform MCP scanning.'], hl:['coding-agent','local-mcp','llm'], hlTbs:['TB2','TB4'] },
-      { step:4, desc:'Coding Assistant attempts to execute the encoded malicious command and prompts user for authorisation.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Use automated dynamic scanning for all MCP servers.','Ensure human-in-the-loop for system-level execution.'], hl:['user','coding-agent'] },
-      { step:5, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','local-mcp'], hlTbs:['TB1','TB4'] }
+      { step:3, desc:'Coding Assistant executes the malicious MCP tool from the local MCP server.', tactics:['Execution'], techniques:['AML.T0053 — AI Agent Tool Invocation','AML.T0051.001 — Indirect LLM Prompt Injection'], mits:['Configure coding assistant to disallow automatic execution.','Perform logging.','Perform MCP scanning.'], hl:['coding-agent','local-mcp','llm'], hlTbs:['TB2','TB4'], reverseArrows:['TB4'] },
+      { step:4, desc:'Coding Assistant attempts to execute the encoded malicious command and prompts user for authorisation.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Use automated dynamic scanning for all MCP servers.','Ensure human-in-the-loop for system-level execution.'], hl:['user','coding-agent'], hlTbs:['TB1'], reverseArrows:true },
+      { step:5, desc:'Encoded malicious command executes — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-004': {
     name:'T-004: Malicious Prompts in Information Sources', diagramType:'ide',
     desc:'The attacker embeds malicious instructions in a publicly accessible guide. When the coding assistant fetches this content, the injected instructions cause it to create a malicious pre-commit hook that executes on the next git commit.',
     steps:[
-      { step:1, desc:'A setup guide containing malicious instructions is created in a GitHub repository. User prompts the Coding Assistant to set up the project referencing the linked GitHub Issues page.', tactics:['Resource Development','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0011 — User Execution'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.'], hl:['user','other-info'], hlTbs:['TB6'] },
+      { step:1, desc:'A setup guide containing malicious instructions is created in a GitHub repository. User prompts the Coding Assistant to set up the project referencing the linked GitHub Issues page.', tactics:['Resource Development','Execution'], techniques:['AML.T0079 — Stage Capabilities','AML.T0011 — User Execution'], mits:['Prompt the agent to self-reflect and flag suspicious prompts.'], hl:['other-info'] },
       { step:2, desc:'The in-built fetch tool extracts information containing malicious instructions from the linked GitHub guide.', tactics:['Initial Access'], techniques:['AML.T0093 — Prompt Infiltration via Public-Facing Application'], mits:['Enforce a whitelist of information sources the coding assistant can access.'], hl:['inbuilt-tools','other-info','coding-agent'], hlTbs:['TB6'] },
       { step:3, desc:'Coding Assistant creates a pre-commit file in the .git folder and appends it with an encoded malicious command.', tactics:['Execution','Resource Development','AI Attack Staging'], techniques:['AML.T0051.001 — Indirect LLM Prompt Injection','AML.T0079 — Stage Capabilities','AML.T0043.004 — Insert Backdoor Trigger'], mits:['Prompt the agent to self-reflect.','Perform scanning on code files of local repositories.'], hl:['coding-agent','llm'], hlTbs:['TB2'] },
       { step:4, desc:'User commits/pushes the project workspace to the remote repository.', tactics:['Execution','Initial Access'], techniques:['AML.T0011 — User Execution','AML.T0010 — AI Supply Chain Compromise'], mits:['Prompt the agent to self-reflect.','Perform scanning on code files.'], hl:['user','coding-agent'] },
-      { step:5, desc:'Upon commit, the pre-commit file executes. Encoded malicious command runs — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'], hlTbs:['TB1'] }
+      { step:5, desc:'Upon commit, the pre-commit file executes. Encoded malicious command runs — user\'s machine is connected to attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent reading of sensitive user folders.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-005': {
@@ -630,10 +633,10 @@ const ATTACK_CHAINS = {
     steps:[
       { step:1, desc:'Threat actor creates a malicious skill package with embedded adversarial instructions and publishes it to a public marketplace or repository.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Ensure skill files are sourced only from trusted, verified repositories.','Perform automated scanning of all downloaded skill files for malicious instructions.'], hl:['skills'] },
       { step:2, desc:'User downloads the skill package and incorporates it into Claude Code via the /skills system.', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Review skill files manually before incorporation.','Restrict skill installation to approved/vetted sources.'], hl:['user','skills'], hlTbs:['TB1'] },
-      { step:3, desc:'Coding Assistant reads and loads the skill file, internalising the embedded malicious instructions.', tactics:['Execution','Persistence'], techniques:['AML.T0051.001 — Indirect LLM Prompt Injection','AML.T0081 — Modify AI Agent Configuration'], mits:['Prompt the agent to self-reflect and flag suspicious instructions in loaded skill files.','Sandbox the environment to limit blast radius.'], hl:['coding-agent','skills','llm'], hlTbs:['TB1','TB2'] },
-      { step:4, desc:'Malicious instructions direct the Coding Assistant to perform unauthorised actions (credential exfiltration, malicious scripts, or encoded commands).', tactics:['Execution','Exfiltration'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0054 — Exfiltration via AI Infrastructure'], mits:['Configure coding assistant to disallow automatic execution of commands not explicitly authorised.','Perform logging of all tool invocations and file operations.'], hl:['coding-agent'], hlTbs:['TB2'] },
-      { step:5, desc:'Coding Assistant prompts user for authorisation to execute the action (or executes silently if auto-approval is enabled).', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Require explicit human-in-the-loop approval for all system-level operations.','Sandbox the coding assistant environment.'], hl:['user','coding-agent'], hlTbs:['TB1'] },
-      { step:6, desc:'Malicious command executes — attacker gains access to user\'s machine or sensitive data is exfiltrated.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent access to sensitive user folders.','Monitor outbound network connections for anomalies.'], hl:['coding-agent'], hlTbs:['TB1'] }
+      { step:3, desc:'Coding Assistant reads and loads the skill file, internalising the embedded malicious instructions.', tactics:['Execution','Persistence'], techniques:['AML.T0051.001 — Indirect LLM Prompt Injection','AML.T0081 — Modify AI Agent Configuration'], mits:['Prompt the agent to self-reflect and flag suspicious instructions in loaded skill files.','Sandbox the environment to limit blast radius.'], hl:['coding-agent','skills','llm'], hlTbs:['TB2'] },
+      { step:4, desc:'Malicious instructions direct the Coding Assistant to perform unauthorised actions (credential exfiltration, malicious scripts, or encoded commands).', tactics:['Execution','Exfiltration'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0054 — Exfiltration via AI Infrastructure'], mits:['Configure coding assistant to disallow automatic execution of commands not explicitly authorised.','Perform logging of all tool invocations and file operations.'], hl:['coding-agent','llm'], hlTbs:['TB2'], reverseArrows:true },
+      { step:5, desc:'Coding Assistant prompts user for authorisation to execute the action (or executes silently if auto-approval is enabled).', tactics:['Execution'], techniques:['AML.T0011 — User Execution'], mits:['Require explicit human-in-the-loop approval for all system-level operations.','Sandbox the coding assistant environment.'], hl:['user','coding-agent'], hlTbs:['TB1'], reverseArrows:true },
+      { step:6, desc:'Malicious command executes — attacker gains access to user\'s machine or sensitive data is exfiltrated.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent access to sensitive user folders.','Monitor outbound network connections for anomalies.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   },
   'T-006': {
@@ -643,8 +646,8 @@ const ATTACK_CHAINS = {
       { step:1, desc:'Threat actor creates a repository with a malicious hook pre-configured in settings.json and publishes it to GitHub.', tactics:['Resource Development'], techniques:['AML.T0079 — Stage Capabilities'], mits:['Ensure open-source repositories are from trusted sources.','Use automated scanning for all downloaded configuration files including settings.json.'], hl:['hooks'] },
       { step:2, desc:'User clones the repository, which includes the pre-configured malicious hook bundled in project settings.', tactics:['Initial Access','Execution'], techniques:['AML.T0010 — AI Supply Chain Compromise','AML.T0011 — User Execution'], mits:['Scan settings.json and hook configurations upon project clone.','Enforce policy requiring review of all hook definitions before project initialisation.'], hl:['user','hooks'], hlTbs:['TB1'] },
       { step:3, desc:'User interacts with the Coding Assistant, triggering the hook\'s defined lifecycle event (e.g., pre-tool-use, post-tool-use, session start).', tactics:['Execution','Persistence'], techniques:['AML.T0011 — User Execution','AML.T0081 — Modify AI Agent Configuration'], mits:['Require explicit user approval before any hook is executed for the first time.','Perform logging of all hook triggers and their outputs.'], hl:['user','coding-agent','hooks'], hlTbs:['TB1'] },
-      { step:4, desc:'Hook executes automatically and runs the embedded malicious command without further user interaction.', tactics:['Execution','Defense Evasion'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0054 — Exfiltration via AI Infrastructure'], mits:['Restrict hooks to a sandboxed environment.','Configure coding assistant to disallow hooks from making outbound connections or accessing sensitive paths.','Perform logging of all hook executions.'], hl:['hooks','coding-agent'], hlTbs:['TB1','TB2'] },
-      { step:5, desc:'Malicious command establishes a reverse shell or exfiltrates sensitive data (e.g., .env files, credentials, SSH keys) to the attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent hooks from reading sensitive user folders.','Monitor outbound network connections for anomalies.'], hl:['hooks','coding-agent'], hlTbs:['TB1'] }
+      { step:4, desc:'Hook executes automatically and runs the embedded malicious command without further user interaction.', tactics:['Execution','Defense Evasion'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0054 — Exfiltration via AI Infrastructure'], mits:['Restrict hooks to a sandboxed environment.','Configure coding assistant to disallow hooks from making outbound connections or accessing sensitive paths.','Perform logging of all hook executions.'], hl:['hooks','coding-agent','llm'], hlTbs:['TB2'] },
+      { step:5, desc:'Malicious command establishes a reverse shell or exfiltrates sensitive data (e.g., .env files, credentials, SSH keys) to the attacker\'s machine.', tactics:['Execution','C2'], techniques:['AML.T0050 — Command and Scripting Interpreter','AML.T0072 — Reverse Shell'], mits:['Sandbox the environment.','Prevent hooks from reading sensitive user folders.','Monitor outbound network connections for anomalies.'], hl:['coding-agent','inbuilt-tools'] }
     ]
   }
 };
@@ -703,16 +706,17 @@ const DIAG = {
     ]
   },
   cli: {
-    title: 'CLI-based Coding Agent', subtitle: 'Claude Code',
+    title: 'CLI-based Coding Agent', subtitle: 'e.g. Claude Code',
     vb:'0 0 900 415', w:900, h:415,
     comps: {
       user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false },
-      'coding-agent':    { x:50,  y:108, w:620, h:178, label:'Claude Code Agent',  fill:'#f7fafc', stroke:'#4a5568', container:true  },
-      'instruction-file':{ x:100, y:155, w:155, h:44,  label:'CLAUDE.md',          fill:'#fffbeb', stroke:'#d69e2e', container:false },
-      skills:            { x:322, y:155, w:115, h:44,  label:'Skills',             fill:'#ebf8ff', stroke:'#3182ce', container:false },
-      hooks:             { x:504, y:155, w:115, h:44,  label:'Hooks',              fill:'#f0fff4', stroke:'#38a169', container:false },
-      plugins:           { x:210, y:211, w:140, h:44,  label:'Plugins',            fill:'#e9d8fd', stroke:'#805ad5', container:false },
-      subagents:         { x:370, y:211, w:140, h:44,  label:'Subagents',          fill:'#fff5f5', stroke:'#e53e3e', container:false },
+      'coding-agent':    { x:50,  y:108, w:620, h:165, label:'Claude Code Agent',  fill:'#f7fafc', stroke:'#4a5568', container:true  },
+      'instruction-file':{ x:100, y:155, w:160, h:44,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false },
+      skills:            { x:280, y:155, w:160, h:44,  label:'Skills',             fill:'#ebf8ff', stroke:'#3182ce', container:false },
+      hooks:             { x:460, y:155, w:160, h:44,  label:'Hooks',              fill:'#f0fff4', stroke:'#38a169', container:false },
+      plugins:           { x:100, y:211, w:160, h:44,  label:'Plugins',            fill:'#e9d8fd', stroke:'#805ad5', container:false },
+      subagents:         { x:280, y:211, w:160, h:44,  label:'Subagents',          fill:'#fff5f5', stroke:'#e53e3e', container:false },
+      'inbuilt-tools':   { x:460, y:211, w:160, h:44,  label:'In-Built Tools',     fill:'#fff5f5', stroke:'#e53e3e', container:false },
       llm:               { x:736, y:155, w:145, h:50,  label:'LLM Server',         fill:'#faf5ff', stroke:'#805ad5', container:false },
       'local-mcp':       { x:55,  y:345, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false },
       'other-info':      { x:270, y:345, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false },
@@ -777,23 +781,38 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
   }
   svgEl.innerHTML = '';
 
-  // Arrow markers (end + start-reverse for bidirectionality)
+  // Prefix marker IDs with the SVG element's own ID to avoid cross-SVG collisions
+  // (marker IDs are global in the HTML document; hidden tabs would break url() refs)
+  const pfx = (svgEl.id || 'diag') + '-';
   const defs = document.createElementNS(NS, 'defs');
   svgEl.appendChild(defs);
-  function mkMarker(id, color) {
+  // h = perpendicular height of the arrowhead triangle (does not affect arrow length)
+  function mkMarker(id, color, h) {
+    h = h || 6;
+    const mid = h / 2;
     [['', 'auto'], ['-s', 'auto-start-reverse']].forEach(([sfx, orient]) => {
       const m = document.createElementNS(NS, 'marker');
-      m.setAttribute('id', id+sfx); m.setAttribute('markerWidth','8'); m.setAttribute('markerHeight','8');
-      m.setAttribute('refX','7'); m.setAttribute('refY','3'); m.setAttribute('orient', orient);
+      m.setAttribute('id', id+sfx);
+      m.setAttribute('markerUnits', 'userSpaceOnUse');
+      m.setAttribute('markerWidth', '12');
+      m.setAttribute('markerHeight', String(h + 4));
+      m.setAttribute('refX', '7'); m.setAttribute('refY', String(mid));
+      m.setAttribute('orient', orient);
       const p = document.createElementNS(NS, 'path');
-      p.setAttribute('d','M0,0 L0,6 L8,3 z'); p.setAttribute('fill', color);
+      p.setAttribute('d', `M0,0 L0,${h} L8,${mid} z`);
+      p.setAttribute('fill', color);
       m.appendChild(p); defs.appendChild(m);
     });
   }
-  mkMarker('arr-gray',  '#a0aec0');
-  mkMarker('arr-red',   '#e53e3e');
-  mkMarker('arr-green', '#38a169');
-  mkMarker('arr-blue',  '#3182ce');
+  mkMarker(pfx+'arr-gray',     '#a0aec0');
+  mkMarker(pfx+'arr-red',      '#e53e3e');
+  mkMarker(pfx+'arr-green',    '#38a169');
+  mkMarker(pfx+'arr-blue',     '#3182ce');
+  mkMarker(pfx+'arr-red-lg',   '#e53e3e', 10);  // larger for attack highlights
+  // Per-TB colour markers for arch mode highlights
+  Object.entries(TRUST_BOUNDARIES).forEach(([tbId, tb]) => {
+    mkMarker(pfx+'arr-tb-'+tbId, tb.stroke);
+  });
 
   // Arrows
   def.arrows.forEach(arr => {
@@ -807,19 +826,35 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
     const tbColor  = arr.tb ? (TRUST_BOUNDARIES[arr.tb]?.stroke || '#3182ce') : '#3182ce';
 
     const color = isHlTb   ? (hlMode==='arch' ? tbColor : hlMode==='green' ? '#38a169' : '#e53e3e')
-                : isHlComp ? '#3182ce'
+                : isHlComp ? (hlMode==='red' ? '#e53e3e' : '#3182ce')
                 : '#c8d2de';
-    const mKey  = isHlTb   ? (hlMode==='green' ? 'arr-green' : 'arr-blue')
-                : isHlComp ? 'arr-blue'
-                : 'arr-gray';
+    const attackHl = hlMode === 'red' && (isHlTb || isHlComp);
+    const mKey  = pfx + (attackHl                  ? 'arr-red-lg'
+                        : isHlTb && hlMode==='arch' ? 'arr-tb-'+arr.tb
+                        : isHlTb                    ? (hlMode==='green' ? 'arr-green' : 'arr-blue')
+                        : isHlComp                  ? 'arr-blue'
+                        : 'arr-gray');
 
     const path = document.createElementNS(NS, 'path');
+    // Attack-highlighted arrows: single-directional to show attack flow.
+    //   reverseArrows: arrowhead moves to the start (agent → user direction).
+    // All other arrows in attack/mit tabs: no arrowheads (lines only).
+    // Arch tab: bidirectional arrowheads retained.
+    // reverseArrows: true = reverse all highlighted arrows
+    //               ['TB3','TB1'] = reverse only those specific TB arrows
+    const revOpt = opts.reverseArrows;
+    const rev = attackHl && (
+      revOpt === true ||
+      (Array.isArray(revOpt) && arr.tb && revOpt.includes(arr.tb))
+    );
+    const showEnd   = hlMode === 'arch' || (attackHl && !rev);
+    const showStart = hlMode === 'arch' || (attackHl && rev);
     path.setAttribute('d', `M ${s.x} ${s.y} L ${e2.x} ${e2.y}`);
     path.setAttribute('fill','none');
     path.setAttribute('stroke', color);
-    path.setAttribute('stroke-width', (isHlTb||isHlComp) ? '2.5' : '1.5');
-    path.setAttribute('marker-end',   `url(#${mKey})`);
-    path.setAttribute('marker-start', `url(#${mKey}-s)`);
+    path.setAttribute('stroke-width', attackHl ? '3' : (isHlTb||isHlComp) ? '2.5' : '1.5');
+    path.setAttribute('marker-end',   showEnd   ? `url(#${mKey})`   : 'none');
+    path.setAttribute('marker-start', showStart ? `url(#${mKey}-s)` : 'none');
     svgEl.appendChild(path);
 
     // TB label pill on arrow
@@ -883,7 +918,8 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
       lt.setAttribute('x', cxOf(comp)); lt.setAttribute('y', comp.y+24);
       lt.setAttribute('text-anchor','middle'); lt.setAttribute('dominant-baseline','middle');
       lt.setAttribute('fill', isHl ? '#742a2a' : '#2d3748');
-      lt.setAttribute('font-size','15'); lt.setAttribute('font-weight','700');
+      lt.setAttribute('font-size','15');
+      lt.setAttribute('font-weight', (isHl && hlMode === 'red') ? '900' : '700');
       g.appendChild(lt);
     } else {
       const lines = wrapLabel(comp.label, 14);
@@ -895,7 +931,8 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
         lt.setAttribute('x', cxOf(comp)); lt.setAttribute('y', startY + i*lh);
         lt.setAttribute('text-anchor','middle'); lt.setAttribute('dominant-baseline','middle');
         lt.setAttribute('fill', isHl ? '#742a2a' : '#2d3748');
-        lt.setAttribute('font-size','12'); lt.setAttribute('font-weight','600');
+        lt.setAttribute('font-size','12');
+        lt.setAttribute('font-weight', (isHl && hlMode === 'red') ? '800' : '600');
         g.appendChild(lt);
       });
     }
@@ -935,6 +972,16 @@ function updateArchTitle() {
   document.getElementById('arch-title-sub').textContent  = def.subtitle;
 }
 
+function updateThreatFilterMuting() {
+  const cliOnly = ['T-005', 'T-006'];
+  document.querySelectorAll('.tf-btn').forEach(btn => {
+    const id = btn.dataset.threat;
+    if (cliOnly.includes(id)) {
+      btn.classList.toggle('tf-muted', currentDiag === 'ide');
+    }
+  });
+}
+
 /* Return the component IDs in the current diagram that are affected by a threat */
 function getCompsByThreat(threatId, diagType) {
   return Object.keys(DIAG[diagType].comps).filter(id => {
@@ -961,6 +1008,7 @@ function onThreatFilterClick(id) {
     currentDiag = 'cli';
     document.querySelectorAll('.dtoggle-btn').forEach(b => b.classList.toggle('active', b.dataset.diagram === 'cli'));
     updateArchTitle();
+    updateThreatFilterMuting();
   }
 
   currentThreatFilter = id;
@@ -1108,6 +1156,7 @@ function initArch() {
       currentThreatFilter = null;
       document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
       updateArchTitle();
+      updateThreatFilterMuting();
       renderArchDiag();
       clearArchInfo();
     });
@@ -1139,6 +1188,7 @@ function initArch() {
   });
 
   updateArchTitle();
+  updateThreatFilterMuting();
   renderArchDiag();
 }
 
@@ -1226,7 +1276,7 @@ function renderAttackDiag() {
   const step  = chain.steps[selectedStepIdx];
   const total = chain.steps.length;
 
-  renderDiag(document.getElementById('attack-svg'), chain.diagramType, step.hl||[], step.hlTbs||[], false, 'red', { responsive:true });
+  renderDiag(document.getElementById('attack-svg'), chain.diagramType, step.hl||[], step.hlTbs||[], false, 'red', { responsive:true, reverseArrows:step.reverseArrows });
 
   /* Update overlay badge */
   const badge = document.getElementById('attack-step-badge');
@@ -1373,7 +1423,7 @@ function renderMit() {
 /* MIT diagram — interactive TB labels filter the table */
 function renderMitDiag(tbId) {
   renderDiag(
-    document.getElementById('mit-svg'), 'ide',
+    document.getElementById('mit-svg'), 'cli',
     null, tbId ? [tbId] : null,
     true, 'green',
     { responsive:true, onTbClick: onMitDiagTbClick, onCompClick: null }
