@@ -28,13 +28,13 @@
 
     /* ── Tabs ── */
     .tab-nav {
-      display: flex; background: white; border-radius: 12px 12px 0 0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-bottom: 2px solid #e2e8f0; overflow-x: auto;
+      display: flex; flex-wrap: wrap; background: white; border-radius: 12px 12px 0 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-bottom: 2px solid #e2e8f0;
     }
     .tab-btn {
-      padding: 16px 28px; border: none; background: transparent; cursor: pointer;
-      font-size: 0.9rem; font-weight: 500; color: #718096;
-      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.18s; white-space: nowrap;
+      flex: 1; padding: 16px 28px; border: none; background: transparent; cursor: pointer;
+      font-size: 0.9rem; font-weight: 500; color: #718096; text-align: center;
+      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.18s, background 0.18s, border-color 0.18s; white-space: nowrap;
     }
     .tab-btn:hover { color: #2d3748; background: rgba(0,0,0,0.02); }
     .tab-btn.active { color: #2b6cb0; border-bottom-color: #2b6cb0; background: white; font-weight: 700; }
@@ -75,7 +75,7 @@
 
     .threat-row { display: flex; align-items: baseline; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f0f4f8; }
     .threat-row:last-child { border-bottom: none; }
-    .threat-row-id { flex-shrink: 0; font-weight: 700; font-size: 0.78rem; background: #feebc8; color: #7b341e; padding: 2px 7px; border-radius: 5px; white-space: nowrap; }
+    .threat-row-id { flex-shrink: 0; font-weight: 700; font-size: 0.78rem; background: var(--tid-fill,#feebc8); color: var(--tid-color,#7b341e); padding: 2px 7px; border-radius: 5px; white-space: nowrap; }
     .threat-row-name { color: #2d3748; font-size: 0.875rem; line-height: 1.45; }
 
     .mit-info-item { padding: 6px 0; border-bottom: 1px solid #f0f4f8; font-size: 0.875rem; color: #2d3748; line-height: 1.5; }
@@ -88,18 +88,19 @@
     .threat-filter-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .tf-btn {
       display: flex; flex-direction: column; gap: 2px;
-      padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0;
+      padding: 8px 14px; border-radius: 8px;
+      border: 1.5px solid var(--tf-stroke, #e2e8f0);
       background: white; cursor: pointer; text-align: left;
       transition: all 0.15s; min-width: 0;
     }
-    .tf-btn:hover { border-color: #dd6b20; background: #fffaf0; }
-    .tf-btn.active { background: #7b341e; border-color: #7b341e; }
-    .tf-btn .tf-id   { font-size: 0.72rem; font-weight: 800; color: #c05621; font-family: 'SF Mono','Fira Code',monospace; }
-    .tf-btn.active .tf-id { color: #fbd38d; }
+    .tf-btn:hover { background: var(--tf-fill, #fffaf0); border-color: var(--tf-stroke, #dd6b20); }
+    .tf-btn.active { background: var(--tf-active, #7b341e); border-color: var(--tf-active, #7b341e); }
+    .tf-btn .tf-id   { font-size: 0.72rem; font-weight: 800; color: var(--tf-stroke, #c05621); font-family: 'SF Mono','Fira Code',monospace; }
+    .tf-btn.active .tf-id { color: rgba(255,255,255,0.85); }
     .tf-btn .tf-name { font-size: 0.82rem; font-weight: 600; color: #2d3748; line-height: 1.3; }
     .tf-btn.active .tf-name { color: white; }
     .tf-btn .tf-scope { font-size: 0.7rem; color: #a0aec0; margin-top: 1px; }
-    .tf-btn.active .tf-scope { color: #fbd38d; opacity: 0.85; }
+    .tf-btn.active .tf-scope { color: rgba(255,255,255,0.7); }
     .tf-btn.tf-muted { border-color: #e2e8f0 !important; background: white !important; }
     .tf-btn.tf-muted .tf-id   { color: #cbd5e0; }
     .tf-btn.tf-muted .tf-name { color: #cbd5e0; }
@@ -130,13 +131,14 @@
     .threat-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .threat-sel-btn {
       display: flex; flex-direction: column; gap: 2px;
-      padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0;
+      padding: 8px 14px; border-radius: 8px;
+      border: 1.5px solid var(--ts-stroke, #e2e8f0);
       background: white; cursor: pointer; text-align: left; transition: all 0.15s;
     }
-    .threat-sel-btn:hover { border-color: #3182ce; background: #ebf8ff; }
-    .threat-sel-btn.active { background: #2b6cb0; border-color: #2b6cb0; }
-    .threat-sel-btn .ts-id   { font-size: 0.72rem; font-weight: 800; color: #2b6cb0; font-family: 'SF Mono','Fira Code',monospace; }
-    .threat-sel-btn.active .ts-id { color: #bee3f8; }
+    .threat-sel-btn:hover { border-color: var(--ts-stroke,#3182ce); background: var(--ts-fill,#ebf8ff); }
+    .threat-sel-btn.active { background: var(--ts-active,#2b6cb0); border-color: var(--ts-active,#2b6cb0); }
+    .threat-sel-btn .ts-id   { font-size: 0.72rem; font-weight: 800; color: var(--ts-stroke,#2b6cb0); font-family: 'SF Mono','Fira Code',monospace; }
+    .threat-sel-btn.active .ts-id { color: rgba(255,255,255,0.85); }
     .threat-sel-btn .ts-name { font-size: 0.82rem; font-weight: 600; color: #2d3748; line-height: 1.3; }
     .threat-sel-btn.active .ts-name { color: white; }
 
@@ -217,7 +219,10 @@
     }
     @media (max-width: 1200px) { .mit-body-layout { grid-template-columns: 1fr; } }
 
-    .mit-table-panel { max-height: 680px; overflow-y: auto; }
+    .mit-table-panel { max-height: 680px; overflow: auto; }
+    .mit-table-panel .table-wrap { overflow: visible; }
+    .mit-table-panel thead th:first-child { border-radius: 8px 0 0 0; }
+    .mit-table-panel thead th:last-child  { border-radius: 0 8px 0 0; }
 
     /* TB filter active banner */
     .mit-tb-banner {
@@ -249,15 +254,15 @@
     .filter-panel h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #4a5568; margin-bottom: 12px; }
     .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     /* "All" stays a compact pill */
-    .filter-chip { display: flex; flex-direction: column; gap: 2px; padding: 7px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; cursor: pointer; background: white; transition: all 0.15s; user-select: none; text-align: left; }
-    .filter-chip:hover { border-color: #3182ce; background: #ebf8ff; }
-    .filter-chip.active { background: #2b6cb0; border-color: #2b6cb0; }
+    .filter-chip { display: flex; flex-direction: column; gap: 2px; padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--fc-stroke,#e2e8f0); cursor: pointer; background: white; transition: all 0.15s; user-select: none; text-align: left; }
+    .filter-chip:hover { border-color: var(--fc-stroke,#3182ce); background: var(--fc-fill,#ebf8ff); }
+    .filter-chip.active { background: var(--fc-active,#2b6cb0); border-color: var(--fc-active,#2b6cb0); }
     .filter-chip.all-chip { align-self: stretch; justify-content: center; }
     .filter-chip.all-chip .fc-id { font-size: 0.875rem; font-weight: 700; color: #4a5568; }
     .filter-chip.all-chip.active .fc-id { color: white; }
     .filter-chip.all-chip.active { background: #1a365d; border-color: #1a365d; }
-    .filter-chip .fc-id   { font-size: 0.72rem; font-weight: 800; color: #2b6cb0; font-family: 'SF Mono','Fira Code',monospace; }
-    .filter-chip.active .fc-id { color: #bee3f8; }
+    .filter-chip .fc-id   { font-size: 0.72rem; font-weight: 800; color: var(--fc-stroke,#2b6cb0); font-family: 'SF Mono','Fira Code',monospace; }
+    .filter-chip.active .fc-id { color: rgba(255,255,255,0.85); }
     .filter-chip .fc-name { font-size: 0.82rem; font-weight: 600; color: #2d3748; line-height: 1.3; }
     .filter-chip.active .fc-name { color: white; }
 
@@ -268,7 +273,7 @@
 
     .table-wrap { overflow-x: auto; border-radius: 8px; border: 1.5px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    thead th { background: #2d3748; color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    thead th { background: #2d3748; color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 1; }
     tbody td { padding: 14px 16px; border-bottom: 1px solid #edf2f7; vertical-align: top; line-height: 1.6; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr.data-row { cursor: pointer; transition: background 0.12s; }
@@ -449,18 +454,46 @@
   </div>
 </div>
 
+<footer style="
+  background: linear-gradient(135deg, #0f2744 0%, #1a3f6f 60%, #1e4d8c 100%);
+  color: rgba(255,255,255,0.65);
+  text-align: center;
+  padding: 28px 40px;
+  margin-top: 32px;
+  font-size: 0.82rem;
+  line-height: 1.8;
+">
+  <div style="max-width:1400px; margin:0 auto;">
+    <div style="color:white; font-weight:600; font-size:0.9rem; margin-bottom:4px;">
+      AI Coding Agent Threat Model Portal
+    </div>
+    <div>
+      Developed by <span style="color:white; font-weight:600;">Joshua Tan</span>
+      &nbsp;·&nbsp; Cyber Security Agency of Singapore
+    </div>
+    <div style="margin-top:6px; font-size:0.75rem; opacity:0.55;">
+      &copy; <span id="footer-year"></span> Joshua Tan. All rights reserved.
+      &nbsp;·&nbsp; For internal use only.
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+
 <script>
 /* ══════════════════════════════════════════════════════
    DATA
 ══════════════════════════════════════════════════════ */
 
 const TRUST_BOUNDARIES = {
-  TB1: { name:'TB1: User ↔ Coding Agent',               stroke:'#dd6b20', fill:'#fffaf0', desc:'Coding Agent operates with prompts and permissions granted by the user, making user interaction a primary entry point for attackers to gain access to the user\'s machine.' },
-  TB2: { name:'TB2: Coding Agent ↔ LLM Server',         stroke:'#3182ce', fill:'#ebf8ff', desc:'The LLM processes all prompts assembled by the Coding Agent. Malicious content injected earlier in the chain reaches the LLM here and is executed as instructions — making this the central exfiltration and manipulation boundary.' },
+  TB1: { name:'TB1: User ↔ Coding Agent',               stroke:'#3182ce', fill:'#ebf8ff', desc:'Coding Agent operates with prompts and permissions granted by the user, making user interaction a primary entry point for attackers to gain access to the user\'s machine.' },
+  TB2: { name:'TB2: Coding Agent ↔ LLM Server',         stroke:'#319795', fill:'#e6fffa', desc:'The LLM processes all prompts assembled by the Coding Agent. Malicious content injected earlier in the chain reaches the LLM here and is executed as instructions — making this the central exfiltration and manipulation boundary.' },
   TB3: { name:'TB3: Coding Agent ↔ Remote MCP Server',  stroke:'#38a169', fill:'#f0fff4', desc:'The Coding Agent relies on remote MCP servers for external tools over a network connection. Malicious or compromised remote MCP servers can inject adversarial instructions into tool responses that flow directly into the LLM context.' },
   TB4: { name:'TB4: Coding Agent ↔ Local MCP Server',   stroke:'#805ad5', fill:'#faf5ff', desc:'The Coding Agent relies on locally-installed MCP servers for customised tools with direct filesystem access. Compromised local MCP servers can read sensitive files and execute malicious commands with local user privileges.' },
-  TB5: { name:'TB5: Local MCP ↔ Other Info Sources',    stroke:'#e53e3e', fill:'#fff5f5', desc:'The local MCP server extracts information from external sources. Attacker-controlled content at these sources can embed prompt injection payloads that are relayed to the Coding Agent via the local MCP.' },
-  TB6: { name:'TB6: Coding Agent ↔ Other Info Sources', stroke:'#319795', fill:'#e6fffa', desc:'The Coding Agent directly retrieves information from external sources (websites, GitHub Issues, databases). Attacker-controlled content can embed malicious prompt injection payloads fetched directly into the LLM context.' }
+  TB5: { name:'TB5: Local MCP ↔ Other Info Sources',    stroke:'#b83280', fill:'#fff0f8', desc:'The local MCP server extracts information from external sources. Attacker-controlled content at these sources can embed prompt injection payloads that are relayed to the Coding Agent via the local MCP.' },
+  TB6: { name:'TB6: Coding Agent ↔ Other Info Sources', stroke:'#e53e3e', fill:'#fff5f5', desc:'The Coding Agent directly retrieves information from external sources (websites, GitHub Issues, databases). Attacker-controlled content can embed malicious prompt injection payloads fetched directly into the LLM context.' }
 };
 
 /* Components — threats match the Excel Components sheet exactly.
@@ -533,37 +566,44 @@ const THREATS_DATA = [
   {
     id:'T-001', name:'Instruction file with malicious prompts',
     desc:'Attacker creates compromised instruction files (e.g. .cursorrules, CLAUDE.md) in a GitHub repository. When the user clones the repository and interacts with the coding assistant, the LLM reads the malicious prompts and executes them — ultimately installing a reverse shell on the user\'s machine.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
+    mainColor:'#d69e2e', mainFill:'#fffbeb', activeColor:'#b7791f'
   },
   {
     id:'T-002a', name:'Malicious remote MCP server',
     desc:'Attacker creates a replica of a popular remote MCP server containing malicious tools. The user unknowingly configures the malicious server, and when the coding assistant is used to set up the project, the malicious MCP tool executes with user authorisation.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
+    mainColor:'#38a169', mainFill:'#f0fff4', activeColor:'#276749'
   },
   {
     id:'T-002b', name:'Compromise of benign remote MCP server',
     desc:'An attacker gains access to a legitimate, trusted remote MCP server and embeds malicious behaviour within the tools the coding assistant executes. Users who have already trusted the server are immediately exposed without any change to their configuration.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
+    mainColor:'#38a169', mainFill:'#f0fff4', activeColor:'#276749'
   },
   {
     id:'T-003', name:'Compromised local MCP server',
     desc:'Attacker creates a trojanised replica of a popular local MCP server package. When the user downloads and runs it locally, the server gains filesystem access. During project initialisation the coding assistant may be granted privileged access to sensitive data, which is then exfiltrated to the attacker.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
+    mainColor:'#805ad5', mainFill:'#faf5ff', activeColor:'#6b46c1'
   },
   {
     id:'T-004', name:'Malicious prompts in information sources',
     desc:'Attacker embeds malicious instructions in external information sources (e.g. GitHub Issues, documentation pages). When the coding assistant fetches this content to fulfil a user request, the injected instructions cause it to create a malicious pre-commit hook, resulting in remote code execution on the next git commit.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Possible', diagrams:['ide','cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Possible', diagrams:['ide','cli'],
+    mainColor:'#e53e3e', mainFill:'#fff5f5', activeColor:'#c53030'
   },
   {
     id:'T-005', name:'Skills with malicious instructions',
     desc:'Threat actors publish malicious skill packages (skill.md and associated files) with embedded adversarial instructions to public marketplaces or repositories. When loaded into Claude Code, the skill directs the coding assistant to perform unauthorised actions — such as exfiltrating credentials or creating a reverse shell.',
-    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['cli']
+    likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['cli'],
+    mainColor:'#4f46e5', mainFill:'#e0e7ff', activeColor:'#4338ca'
   },
   {
     id:'T-006', name:'Hooks with malicious actions',
     desc:'Threat actors create repositories with a malicious hook pre-configured in settings.json (e.g. a post-tool-use or session-start hook). When a user clones the repository and interacts with the coding assistant, the hook\'s lifecycle event fires automatically and executes the embedded malicious payload without further user interaction.',
-    likelihoodBefore:'Possible', likelihoodAfter:'Unlikely', diagrams:['cli']
+    likelihoodBefore:'Possible', likelihoodAfter:'Unlikely', diagrams:['cli'],
+    mainColor:'#0891b2', mainFill:'#e0f2fe', activeColor:'#0e7490'
   }
 ];
 
@@ -688,8 +728,8 @@ const DIAG = {
       user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false },
       'coding-agent':    { x:50,  y:108, w:620, h:174, label:'Coding Assistant',   fill:'#f7fafc', stroke:'#4a5568', container:true  },
       'instruction-file':{ x:240, y:158, w:240, h:46,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false },
-      'inbuilt-tools':   { x:240, y:216, w:240, h:46,  label:'In-Built Tools',     fill:'#fff5f5', stroke:'#e53e3e', container:false },
-      llm:               { x:736, y:148, w:145, h:50,  label:'LLM Server',         fill:'#faf5ff', stroke:'#805ad5', container:false },
+      'inbuilt-tools':   { x:240, y:216, w:240, h:46,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false },
+      llm:               { x:736, y:148, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false },
       'local-mcp':       { x:55,  y:338, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false },
       'other-info':      { x:270, y:338, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false },
       'remote-mcp':      { x:490, y:338, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false }
@@ -712,12 +752,12 @@ const DIAG = {
       user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false },
       'coding-agent':    { x:50,  y:108, w:620, h:165, label:'Claude Code Agent',  fill:'#f7fafc', stroke:'#4a5568', container:true  },
       'instruction-file':{ x:100, y:155, w:160, h:44,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false },
-      skills:            { x:280, y:155, w:160, h:44,  label:'Skills',             fill:'#ebf8ff', stroke:'#3182ce', container:false },
-      hooks:             { x:460, y:155, w:160, h:44,  label:'Hooks',              fill:'#f0fff4', stroke:'#38a169', container:false },
-      plugins:           { x:100, y:211, w:160, h:44,  label:'Plugins',            fill:'#e9d8fd', stroke:'#805ad5', container:false },
-      subagents:         { x:280, y:211, w:160, h:44,  label:'Subagents',          fill:'#fff5f5', stroke:'#e53e3e', container:false },
-      'inbuilt-tools':   { x:460, y:211, w:160, h:44,  label:'In-Built Tools',     fill:'#fff5f5', stroke:'#e53e3e', container:false },
-      llm:               { x:736, y:155, w:145, h:50,  label:'LLM Server',         fill:'#faf5ff', stroke:'#805ad5', container:false },
+      skills:            { x:280, y:155, w:160, h:44,  label:'Skills',             fill:'#e0e7ff', stroke:'#4f46e5', container:false },
+      hooks:             { x:460, y:155, w:160, h:44,  label:'Hooks',              fill:'#e0f2fe', stroke:'#0891b2', container:false },
+      plugins:           { x:100, y:211, w:160, h:44,  label:'Plugins',            fill:'#fefce8', stroke:'#a16207', container:false },
+      subagents:         { x:280, y:211, w:160, h:44,  label:'Subagents',          fill:'#fce7f3', stroke:'#be185d', container:false },
+      'inbuilt-tools':   { x:460, y:211, w:160, h:44,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false },
+      llm:               { x:736, y:155, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false },
       'local-mcp':       { x:55,  y:345, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false },
       'other-info':      { x:270, y:345, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false },
       'remote-mcp':      { x:490, y:345, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false }
@@ -847,8 +887,8 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
       revOpt === true ||
       (Array.isArray(revOpt) && arr.tb && revOpt.includes(arr.tb))
     );
-    const showEnd   = hlMode === 'arch' || (attackHl && !rev);
-    const showStart = hlMode === 'arch' || (attackHl && rev);
+    const showEnd   = attackHl && !rev;
+    const showStart = attackHl && rev;
     path.setAttribute('d', `M ${s.x} ${s.y} L ${e2.x} ${e2.y}`);
     path.setAttribute('fill','none');
     path.setAttribute('stroke', color);
@@ -943,6 +983,13 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
 /* ══════════════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════════════ */
+/* Return {fill, stroke, active} colours for a threat ID, with safe fallback */
+function threatColors(id) {
+  const td = THREATS_DATA.find(t => t.id === id);
+  if (!td || !td.mainColor) return { fill:'#feebc8', stroke:'#b7791f', active:'#7b341e' };
+  return { fill: td.mainFill, stroke: td.mainColor, active: td.activeColor };
+}
+
 let currentDiag         = 'ide';
 let currentThreatFilter = null;
 let selectedAttack      = 'T-001';
@@ -1116,9 +1163,10 @@ function showArchInfo(type, name, desc, threats, tbId) {
       : threats;
 
     threatsDiv.innerHTML = ids.map(tid => {
-      const t = THREATS_DATA.find(x => x.id === tid);
+      const t  = THREATS_DATA.find(x => x.id === tid);
+      const tc = threatColors(tid);
       return `<div class="threat-row">
-        <span class="threat-row-id">${tid}</span>
+        <span class="threat-row-id" style="--tid-fill:${tc.fill};--tid-color:${tc.active};">${tid}</span>
         <span class="threat-row-name">${t ? t.name : tid}</span>
       </div>`;
     }).join('');
@@ -1168,6 +1216,9 @@ function initArch() {
     const btn = document.createElement('button');
     btn.className = 'tf-btn';
     btn.dataset.threat = td.id;
+    if (td.mainColor)  btn.style.setProperty('--tf-stroke', td.mainColor);
+    if (td.mainFill)   btn.style.setProperty('--tf-fill',   td.mainFill);
+    if (td.activeColor) btn.style.setProperty('--tf-active', td.activeColor);
     const scopeLabel = td.diagrams.length === 1 ? (td.diagrams[0] === 'cli' ? 'CLI only' : 'IDE only') : 'IDE + CLI';
     btn.innerHTML = `
       <span class="tf-id">${td.id}</span>
@@ -1200,8 +1251,12 @@ function initAttack() {
   Object.keys(ATTACK_CHAINS).forEach(id => {
     const chain = ATTACK_CHAINS[id];
     const td = THREATS_DATA.find(t => t.id === id);
+    const tc = threatColors(id);
     const btn = document.createElement('button');
     btn.className = 'threat-sel-btn' + (id === selectedAttack ? ' active' : '');
+    btn.style.setProperty('--ts-stroke', tc.stroke);
+    btn.style.setProperty('--ts-fill',   tc.fill);
+    btn.style.setProperty('--ts-active', tc.active);
     btn.innerHTML = `<span class="ts-id">${id}</span><span class="ts-name">${td ? td.name : chain.name.replace(id+': ','')}</span>`;
     btn.addEventListener('click', () => {
       selectedAttack = id; selectedStepIdx = 0;
@@ -1302,6 +1357,10 @@ function initMit() {
       c.innerHTML = `<span class="fc-id">All Threats</span>`;
     } else {
       const td = THREATS_DATA.find(x => x.id === t);
+      const tc = threatColors(t);
+      c.style.setProperty('--fc-stroke', tc.stroke);
+      c.style.setProperty('--fc-fill',   tc.fill);
+      c.style.setProperty('--fc-active', tc.active);
       c.innerHTML = `<span class="fc-id">${t}</span><span class="fc-name">${td ? td.name : t}</span>`;
     }
     c.addEventListener('click', () => {
@@ -1365,7 +1424,7 @@ function renderMit() {
     tr.className = 'data-row';
     tr.innerHTML = `
       <td style="font-weight:600;color:#2d3748;">${m.m}</td>
-      <td>${m.ts.map(t => `<span style="display:inline-block;background:#e9d8fd;color:#553c9a;border-radius:5px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin:1px;">${t}</span>`).join(' ')}</td>
+      <td>${m.ts.map(t => { const tc2=threatColors(t); return `<span style="display:inline-block;background:${tc2.fill};color:${tc2.active};border-radius:5px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin:1px;">${t}</span>`; }).join(' ')}</td>
       <td><span style="display:inline-block;background:${tf};color:${tc};border:1.5px solid ${tc};border-radius:5px;padding:3px 9px;font-size:0.8rem;font-weight:700;">${m.tb}</span></td>
       <td style="text-align:center;padding-right:12px;">
         <span class="mit-expand-icon" id="mit-icon-${idx}">▼</span>
