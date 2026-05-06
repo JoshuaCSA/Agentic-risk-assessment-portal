@@ -162,6 +162,10 @@
     .tf-btn.tf-muted .tf-id   { color: #cbd5e0; }
     .tf-btn.tf-muted .tf-name { color: #cbd5e0; }
     .tf-btn.tf-muted .tf-scope { color: #e2e8f0; }
+    html.dark .tf-btn.tf-muted { border-color: var(--border) !important; background: var(--bg-subtle) !important; }
+    html.dark .tf-btn.tf-muted .tf-id   { color: var(--text-faint); }
+    html.dark .tf-btn.tf-muted .tf-name { color: var(--text-faint); }
+    html.dark .tf-btn.tf-muted .tf-scope { color: var(--border-mid); }
 
     /* Affected component list in info panel */
     .comp-list-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--text-primary); }
@@ -457,8 +461,11 @@
       </div>
 
       <!-- Right column: scrollable step list -->
-      <div class="attack-steps-panel">
-        <div class="steps-container" id="steps-container"></div>
+      <div>
+        <div class="attack-diagram-title">Details</div>
+        <div class="attack-steps-panel">
+          <div class="steps-container" id="steps-container"></div>
+        </div>
       </div>
 
     </div>
@@ -633,31 +640,31 @@ const THREATS_DATA = [
     id:'T-001', name:'Instruction file with malicious prompts',
     desc:'Attacker creates compromised instruction files (e.g. .cursorrules, CLAUDE.md) in a GitHub repository. When the user clones the repository and interacts with the coding assistant, the LLM reads the malicious prompts and executes them — ultimately installing a reverse shell on the user\'s machine.',
     likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
-    mainColor:'#d69e2e', mainFill:'#fffbeb', activeColor:'#b7791f'
+    mainColor:'#d69e2e', mainFill:'#fef3c7', activeColor:'#b7791f'
   },
   {
     id:'T-002a', name:'Malicious remote MCP server',
     desc:'Attacker creates a replica of a popular remote MCP server containing malicious tools. The user unknowingly configures the malicious server, and when the coding assistant is used to set up the project, the malicious MCP tool executes with user authorisation.',
     likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
-    mainColor:'#38a169', mainFill:'#f0fff4', activeColor:'#276749'
+    mainColor:'#38a169', mainFill:'#d1fae5', activeColor:'#276749'
   },
   {
     id:'T-002b', name:'Compromise of benign remote MCP server',
     desc:'An attacker gains access to a legitimate, trusted remote MCP server and embeds malicious behaviour within the tools the coding assistant executes. Users who have already trusted the server are immediately exposed without any change to their configuration.',
     likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
-    mainColor:'#38a169', mainFill:'#f0fff4', activeColor:'#276749'
+    mainColor:'#38a169', mainFill:'#d1fae5', activeColor:'#276749'
   },
   {
     id:'T-003', name:'Compromised local MCP server',
     desc:'Attacker creates a trojanised replica of a popular local MCP server package. When the user downloads and runs it locally, the server gains filesystem access. During project initialisation the coding assistant may be granted privileged access to sensitive data, which is then exfiltrated to the attacker.',
     likelihoodBefore:'Likely', likelihoodAfter:'Unlikely', diagrams:['ide','cli'],
-    mainColor:'#805ad5', mainFill:'#faf5ff', activeColor:'#6b46c1'
+    mainColor:'#805ad5', mainFill:'#ede9fe', activeColor:'#6b46c1'
   },
   {
     id:'T-004', name:'Malicious prompts in information sources',
     desc:'Attacker embeds malicious instructions in external information sources (e.g. GitHub Issues, documentation pages). When the coding assistant fetches this content to fulfil a user request, the injected instructions cause it to create a malicious pre-commit hook, resulting in remote code execution on the next git commit.',
     likelihoodBefore:'Likely', likelihoodAfter:'Possible', diagrams:['ide','cli'],
-    mainColor:'#e53e3e', mainFill:'#fff5f5', activeColor:'#c53030'
+    mainColor:'#e53e3e', mainFill:'#fee2e2', activeColor:'#c53030'
   },
   {
     id:'T-005', name:'Skills with malicious instructions',
@@ -791,14 +798,14 @@ const DIAG = {
     title: 'IDE-based Coding Agent', subtitle: 'e.g. GitHub Copilot, Windsurf, Cursor',
     vb:'0 0 900 408', w:900, h:408,
     comps: {
-      user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false },
-      'coding-agent':    { x:50,  y:108, w:620, h:174, label:'Coding Assistant',   fill:'#f7fafc', stroke:'#4a5568', container:true  },
-      'instruction-file':{ x:240, y:158, w:240, h:46,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false },
-      'inbuilt-tools':   { x:240, y:216, w:240, h:46,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false },
-      llm:               { x:736, y:148, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false },
-      'local-mcp':       { x:55,  y:338, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false },
-      'other-info':      { x:270, y:338, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false },
-      'remote-mcp':      { x:490, y:338, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false }
+      user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false, icon:'👤' },
+      'coding-agent':    { x:50,  y:108, w:620, h:174, label:'Coding Assistant',   fill:'#f7fafc', stroke:'#4a5568', container:true,  icon:'🤖' },
+      'instruction-file':{ x:240, y:158, w:240, h:46,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false, icon:'📄' },
+      'inbuilt-tools':   { x:240, y:216, w:240, h:46,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false, icon:'🔧' },
+      llm:               { x:736, y:148, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false, icon:'🧠' },
+      'local-mcp':       { x:55,  y:338, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false, icon:'🖥️' },
+      'other-info':      { x:270, y:338, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false, icon:'📚' },
+      'remote-mcp':      { x:490, y:338, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false, icon:'🌐' }
     },
     tbBoxes:{},
     arrows:[
@@ -815,18 +822,18 @@ const DIAG = {
     title: 'CLI-based Coding Agent', subtitle: 'e.g. Claude Code',
     vb:'0 0 900 415', w:900, h:415,
     comps: {
-      user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false },
-      'coding-agent':    { x:50,  y:108, w:620, h:165, label:'Claude Code Agent',  fill:'#f7fafc', stroke:'#4a5568', container:true  },
-      'instruction-file':{ x:100, y:155, w:160, h:44,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false },
-      skills:            { x:280, y:155, w:160, h:44,  label:'Skills',             fill:'#e0e7ff', stroke:'#4f46e5', container:false },
-      hooks:             { x:460, y:155, w:160, h:44,  label:'Hooks',              fill:'#e0f2fe', stroke:'#0891b2', container:false },
-      plugins:           { x:100, y:211, w:160, h:44,  label:'Plugins',            fill:'#fefce8', stroke:'#a16207', container:false },
-      subagents:         { x:280, y:211, w:160, h:44,  label:'Subagents',          fill:'#fce7f3', stroke:'#be185d', container:false },
-      'inbuilt-tools':   { x:460, y:211, w:160, h:44,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false },
-      llm:               { x:736, y:155, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false },
-      'local-mcp':       { x:55,  y:345, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false },
-      'other-info':      { x:270, y:345, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false },
-      'remote-mcp':      { x:490, y:345, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false }
+      user:              { x:250, y:8,   w:220, h:50,  label:'User',               fill:'#ebf8ff', stroke:'#3182ce', container:false, icon:'👤' },
+      'coding-agent':    { x:50,  y:108, w:620, h:165, label:'Claude Code Agent',  fill:'#f7fafc', stroke:'#4a5568', container:true,  icon:'🤖' },
+      'instruction-file':{ x:100, y:155, w:160, h:44,  label:'Instruction Files',  fill:'#fffbeb', stroke:'#d69e2e', container:false, icon:'📄' },
+      skills:            { x:280, y:155, w:160, h:44,  label:'Skills',             fill:'#e0e7ff', stroke:'#4f46e5', container:false, icon:'⚡' },
+      hooks:             { x:460, y:155, w:160, h:44,  label:'Hooks',              fill:'#e0f2fe', stroke:'#0891b2', container:false, icon:'🪝' },
+      plugins:           { x:100, y:211, w:160, h:44,  label:'Plugins',            fill:'#fefce8', stroke:'#a16207', container:false, icon:'🧩' },
+      subagents:         { x:280, y:211, w:160, h:44,  label:'Subagents',          fill:'#fce7f3', stroke:'#be185d', container:false, icon:'🤝' },
+      'inbuilt-tools':   { x:460, y:211, w:160, h:44,  label:'In-Built Tools',     fill:'#fff3e0', stroke:'#c05621', container:false, icon:'🔧' },
+      llm:               { x:736, y:155, w:145, h:50,  label:'LLM Server',         fill:'#e6fffa', stroke:'#319795', container:false, icon:'🧠' },
+      'local-mcp':       { x:55,  y:345, w:170, h:50,  label:'Local MCP Server',   fill:'#faf5ff', stroke:'#805ad5', container:false, icon:'🖥️' },
+      'other-info':      { x:270, y:345, w:175, h:50,  label:'Other Info Sources', fill:'#fff5f5', stroke:'#e53e3e', container:false, icon:'📚' },
+      'remote-mcp':      { x:490, y:345, w:170, h:50,  label:'Remote MCP Server',  fill:'#f0fff4', stroke:'#38a169', container:false, icon:'🌐' }
     },
     tbBoxes:{},
     arrows:[
@@ -1014,22 +1021,24 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
     rect.setAttribute('width', comp.w); rect.setAttribute('height', comp.h);
     rect.setAttribute('rx', comp.container ? '10' : '8');
     const compFill = comp.container ? (cssVar('--bg-subtle') || comp.fill) : comp.fill;
-    rect.setAttribute('fill',   isHl ? '#fed7d7' : compFill);
-    rect.setAttribute('stroke', isHl ? '#e53e3e' : comp.stroke);
+    const nativeHl = isHl && opts.compHlStyle === 'native';
+    rect.setAttribute('fill',   isHl ? (nativeHl ? comp.stroke : '#fed7d7') : compFill);
+    rect.setAttribute('stroke', isHl ? (nativeHl ? comp.stroke : '#e53e3e') : comp.stroke);
     rect.setAttribute('stroke-width', isHl ? '3' : (comp.container ? '2' : '1.5'));
     g.appendChild(rect);
 
     if (comp.container) {
       const lt = document.createElementNS(NS, 'text');
-      lt.textContent = comp.label;
+      lt.textContent = (comp.icon ? comp.icon + ' ' : '') + comp.label;
       lt.setAttribute('x', cxOf(comp)); lt.setAttribute('y', comp.y+24);
       lt.setAttribute('text-anchor','middle'); lt.setAttribute('dominant-baseline','middle');
-      lt.setAttribute('fill', isHl ? '#742a2a' : (cssVar('--text-primary') || '#2d3748'));
+      lt.setAttribute('fill', nativeHl ? 'white' : (isHl ? '#742a2a' : (cssVar('--text-primary') || '#2d3748')));
       lt.setAttribute('font-size','15');
-      lt.setAttribute('font-weight', (isHl && hlMode === 'red') ? '900' : '700');
+      lt.setAttribute('font-weight', '700');
       g.appendChild(lt);
     } else {
-      const lines = wrapLabel(comp.label, 14);
+      const labelText = comp.icon ? comp.icon + ' ' + comp.label : comp.label;
+      const lines = wrapLabel(labelText, 17);
       const lh = 16, totalH = lines.length * lh;
       const startY = cyOf(comp) - totalH/2 + lh/2;
       lines.forEach((line, i) => {
@@ -1037,9 +1046,9 @@ function renderDiag(svgEl, dtype, hlComps, hlTbs, interactive, hlMode, opts) {
         lt.textContent = line;
         lt.setAttribute('x', cxOf(comp)); lt.setAttribute('y', startY + i*lh);
         lt.setAttribute('text-anchor','middle'); lt.setAttribute('dominant-baseline','middle');
-        lt.setAttribute('fill', isHl ? '#742a2a' : '#2d3748');
+        lt.setAttribute('fill', nativeHl ? 'white' : (isHl ? '#742a2a' : '#2d3748'));
         lt.setAttribute('font-size','12');
-        lt.setAttribute('font-weight', (isHl && hlMode === 'red') ? '800' : '600');
+        lt.setAttribute('font-weight', '600');
         g.appendChild(lt);
       });
     }
@@ -1183,8 +1192,8 @@ function showThreatInfo(td, affectedIds) {
   mitWrap.style.display = 'none';
 }
 
-function renderArchDiag(hlComps, hlTbs) {
-  renderDiag(document.getElementById('arch-svg'), currentDiag, hlComps, hlTbs, true, 'arch', { responsive:true });
+function renderArchDiag(hlComps, hlTbs, compHlStyle) {
+  renderDiag(document.getElementById('arch-svg'), currentDiag, hlComps, hlTbs, true, 'arch', { responsive:true, compHlStyle: compHlStyle || 'red' });
 }
 
 function onCompClick(id) {
@@ -1192,7 +1201,7 @@ function onCompClick(id) {
   if (!comp) return;
   currentThreatFilter = null;
   document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
-  renderArchDiag([id], null);
+  renderArchDiag([id], null, 'native');
   showArchInfo('component', comp.name, comp.desc, comp.threats, null);
   document.querySelectorAll('.tb-legend-item').forEach(i => i.classList.remove('active'));
 }
@@ -1496,7 +1505,7 @@ function renderMit() {
     tr.className = 'data-row';
     tr.innerHTML = `
       <td style="font-weight:600;color:var(--text-primary);">${m.m}</td>
-      <td>${m.ts.map(t => { const tc2=threatColors(t); return `<span style="display:inline-block;background:${tc2.fill};color:${tc2.active};border-radius:5px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin:1px;">${t}</span>`; }).join(' ')}</td>
+      <td>${m.ts.map(t => { const tc2=threatColors(t); return `<span style="display:inline-block;white-space:nowrap;background:${tc2.fill};color:${tc2.active};border-radius:5px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin:1px;">${t}</span>`; }).join(' ')}</td>
       <td><span style="display:inline-block;background:${tf};color:${tc};border:1.5px solid ${tc};border-radius:5px;padding:3px 9px;font-size:0.8rem;font-weight:700;">${m.tb}</span></td>
       <td style="text-align:center;padding-right:12px;">
         <span class="mit-expand-icon" id="mit-icon-${idx}">▼</span>
@@ -1535,14 +1544,7 @@ function renderMit() {
         tr.classList.add('row-active');
         selectedMitIdx = idx;
         renderMitDiag(m.tb);
-        const box = document.getElementById('mit-tb-info');
-        if (tbi) {
-          document.getElementById('mit-tb-name').textContent = tbi.name;
-          document.getElementById('mit-tb-desc').textContent = tbi.desc;
-          box.style.display     = 'block';
-          box.style.borderColor = tbi.stroke;
-          box.style.background  = tbi.fill;
-        }
+        showMitTbInfo(m.tb);
       }
     });
 
@@ -1561,6 +1563,23 @@ function renderMitDiag(tbId) {
   );
 }
 
+function showMitTbInfo(tbId) {
+  const box = document.getElementById('mit-tb-info');
+  const tbi = TRUST_BOUNDARIES[tbId];
+  if (tbi) {
+    document.getElementById('mit-tb-name').textContent = tbi.name;
+    document.getElementById('mit-tb-desc').textContent = tbi.desc;
+    const isDark = document.documentElement.classList.contains('dark');
+    box.style.display     = 'block';
+    box.style.borderColor = tbi.stroke;
+    box.style.background  = isDark ? tbi.stroke : tbi.fill;
+    box.style.color       = isDark ? 'white' : '';
+    box.querySelector('strong').style.color = isDark ? 'white' : '';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
 function onMitDiagTbClick(tbId) {
   if (mitActiveTb === tbId) {
     clearMitTbFilter();
@@ -1570,7 +1589,7 @@ function onMitDiagTbClick(tbId) {
   selectedMitIdx = null;
   renderMitDiag(tbId);
   updateMitTbBanner();
-  document.getElementById('mit-tb-info').style.display = 'none';
+  showMitTbInfo(tbId);
   renderMit();
 }
 
@@ -1606,6 +1625,11 @@ function toggleTheme() {
   renderArchDiag();
   renderAttackDiag();
   renderMitDiag(mitActiveTb || null);
+  // Re-apply TB info box colours for the new theme
+  const activeTbForInfo = selectedMitIdx !== null
+    ? getMitFiltered()[selectedMitIdx]?.tb
+    : mitActiveTb;
+  if (activeTbForInfo) showMitTbInfo(activeTbForInfo);
 }
 
 function updateThemeBtn(isDark) {
