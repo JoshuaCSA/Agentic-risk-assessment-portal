@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Coding Agent Threat Model Portal</title>
+  <title>AI Coding Assistant Security Assessment Playbook</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -353,8 +353,8 @@
 
 <header class="header">
   <div class="header-left">
-    <h1>AI Coding Agent Threat Model Portal</h1>
-    <div class="subtitle">Threat Vector Analysis · Attack Chain Visualisation · Mitigation Guidance</div>
+    <h1>AI Coding Assistant Security Assessment Playbook</h1>
+    <div class="subtitle">Attack Vector Analysis · Attack Path Visualisation · Mitigation Guidance</div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light theme">
@@ -367,14 +367,14 @@
 <div class="container">
   <div class="tab-nav">
     <button class="tab-btn active" data-tab="architecture">01 · System Architecture</button>
-    <button class="tab-btn" data-tab="attack-chain">02 · Attack Chain</button>
+    <button class="tab-btn" data-tab="attack-chain">02 · Attack Path</button>
     <button class="tab-btn" data-tab="mitigations">03 · Mitigations</button>
   </div>
 
   <!-- ═══ TAB 1: ARCHITECTURE ═══ -->
   <div class="tab-panel active" id="panel-architecture">
     <div class="pane-title">System Architecture</div>
-    <div class="pane-desc">Click any component or trust boundary label to view its description, associated threat vectors, and applicable mitigations. Toggle between IDE-based agents (e.g. GitHub Copilot, Cursor, Windsurf) and CLI-based agents (Claude Code).</div>
+    <div class="pane-desc">Click any component or trust boundary label to view its description, associated attack vectors, and applicable mitigations. Toggle between IDE-based agents (e.g. GitHub Copilot, Cursor, Windsurf) and CLI-based agents (Claude Code).</div>
     <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
       <div class="diagram-toggle" style="margin-bottom:0;">
         <button class="dtoggle-btn active" data-diagram="ide">IDE-based Agents</button>
@@ -382,7 +382,7 @@
       </div>
     </div>
     <div class="threat-filter-section">
-      <h3>Filter by Threat Vector — select to highlight affected components</h3>
+      <h3>Filter by Attack Vector — select to highlight affected components</h3>
       <div class="threat-filter-grid" id="threat-filter-grid"></div>
     </div>
     <div class="arch-layout">
@@ -412,7 +412,7 @@
           <div class="info-desc" id="arch-info-desc"></div>
           <!-- threat vectors section -->
           <div id="arch-info-threats-wrap">
-            <div class="info-section-label">Associated Threat Vectors</div>
+            <div class="info-section-label">Associated Attack Vectors</div>
             <div id="arch-info-threats"></div>
           </div>
           <!-- mitigations section (shown for TB clicks) -->
@@ -427,8 +427,8 @@
 
   <!-- ═══ TAB 2: ATTACK CHAIN ═══ -->
   <div class="tab-panel" id="panel-attack-chain">
-    <div class="pane-title">Attack Chain</div>
-    <div class="pane-desc">Select a threat vector below, then click any step (or use the buttons) to navigate. The diagram highlights the components involved at the active step.</div>
+    <div class="pane-title">Attack Path</div>
+    <div class="pane-desc">Select an attack vector below, then click any step (or use the buttons) to navigate. The diagram highlights the components involved at the active step.</div>
     <div class="threat-selector" id="threat-selector"></div>
     <div class="attack-overview" id="attack-overview"></div>
 
@@ -467,10 +467,10 @@
   <!-- ═══ TAB 3: MITIGATIONS ═══ -->
   <div class="tab-panel" id="panel-mitigations">
     <div class="pane-title">Mitigations</div>
-    <div class="pane-desc">Filter by threat vector, or click a trust boundary label in the diagram to filter to its mitigations. Click any table row to expand its example implementation and highlight the boundary in the diagram.</div>
+    <div class="pane-desc">Filter by attack vector, or click a trust boundary label in the diagram to filter to its mitigations. Click any table row to expand its example implementation and highlight the boundary in the diagram.</div>
 
     <div class="filter-panel">
-      <h3>Filter by Threat Vector</h3>
+      <h3>Filter by Attack Vector</h3>
       <div class="filter-chips" id="mit-filter-chips"></div>
     </div>
 
@@ -506,7 +506,7 @@
             <thead>
               <tr>
                 <th style="width:62%">Mitigation</th>
-                <th style="width:14%">Threat Vector</th>
+                <th style="width:14%">Attack Vector</th>
                 <th style="width:14%">Trust Boundary</th>
                 <th style="width:10%"></th>
               </tr>
@@ -531,7 +531,7 @@
 ">
   <div style="max-width:1400px; margin:0 auto;">
     <div style="color:white; font-weight:600; font-size:0.9rem; margin-bottom:4px;">
-      AI Coding Agent Threat Model Portal
+      AI Coding Assistant Security Assessment Playbook
     </div>
     <div>
       Developed by <span style="color:white; font-weight:600;">Joshua Tan</span>
@@ -572,7 +572,7 @@ const COMPONENTS = {
   },
   'coding-agent': {
     name: 'Coding Assistant',
-    desc: 'The AI agent that processes user prompts, assembles context, invokes tools, and generates code. All threat vectors flow through the coding assistant\'s LLM context window — it is the central chokepoint for all attacks.',
+    desc: 'The AI agent that processes user prompts, assembles context, invokes tools, and generates code. All attack vectors flow through the coding assistant\'s LLM context window — it is the central chokepoint for all attacks.',
     threats: ['T-001','T-002a','T-002b','T-003','T-004']
   },
   'instruction-file': {
@@ -622,7 +622,7 @@ const COMPONENTS = {
   },
   subagents: {
     name: 'Subagents',
-    desc: 'Subagents spawned by the main agent to assist with specific tasks. They inherit the same risks as the main agent — all threat vectors that apply to the main agent apply equally to spawned subagents.',
+    desc: 'Subagents spawned by the main agent to assist with specific tasks. They inherit the same risks as the main agent — all attack vectors that apply to the main agent apply equally to spawned subagents.',
     threats: ['All']
   }
 };
@@ -1145,7 +1145,7 @@ function showThreatInfo(td, affectedIds) {
   content.classList.add('visible');
 
   const badge = document.getElementById('arch-info-badge');
-  badge.textContent = 'Threat Vector';
+  badge.textContent = 'Attack Vector';
   badge.className   = 'info-type-badge badge-threat';
 
   document.getElementById('arch-info-name').textContent = td.id + ': ' + td.name;
